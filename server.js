@@ -3,28 +3,38 @@
 var fs = require('fs');
 var http = require('http');
 
-
-//TODO create a server using http
-//TODO start the server on port 8000
-
-
-function fetchFile(req, res, filename){
-  //read a file asynchronously using fs. Once the file has been read fs will
-  //invoke the callback function passing in an error or data.
-  fs.readFile(filename, function(err, data){
-    handleFileLoad(req, res, err, data);
-  });
-}
-
-function handleFileLoad(req, res, err, data){
-  if(err){ //if an error exists
-   throw err;
-  } else { // else we successfully loaded the file
-
-    //TODO set the status code to 200 to show that we succeeded.
-
-    //TODO write the file data to the response. We use toString to make it human readable.
-
-    //TODO send the response back to the client.
+//res.statusCode, 200 is for success and 404 is for the error
+function handleRequest(req, res, filename) {
+  if (req.url === '/index.html') {
+    fs.readFile('./index.html', function(err, data) {
+      res.statusCode = 200;
+      res.write(data.toString());
+      res.end();
+    });
+  } else if (req.url === '/app.js') {
+    fs.readFile('./app.js', function(err, data) {
+      res.statusCode = 200;
+      res.write(data.toString());
+      res.end();
+    });
+  } else if (req.url === '/api') {
+    fs.readFile('./data.json', function(err, data) {
+      res.statusCode = 200;
+      res.write(data.toString());
+      res.end();
+    });
+  } else {
+    res.statusCode = 404;
+    console.log('statusCode 404');
+    res.write('404: this doesnt exist');
+    res.end();
   }
 }
+
+//create a server using http
+var server = http.createServer(handleRequest);
+
+//start the server on port 8000
+server.listen(8000, 'localhost', function() {
+  console.log('running on localhost:8000');
+});

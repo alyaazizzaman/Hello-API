@@ -7,3 +7,11 @@
 //Alternatively
 
 //See http://api.jquery.com/jquery.ajax/ for an exmaple of the ajax function
+
+$.ajax({
+  url: 'http://localhost:8000/api',
+  json: 'callback',
+  dataType: 'json'
+}).done(function main(data) {
+  console.log(data);
+});
